@@ -70,7 +70,7 @@ TEST_F(ParseGutenbergTests, ParseAuthors) {
         } else if(tagName.rfind("marcrel:")==0 || tagName=="dcterms:creator") {
             xmlParser.IntoElem();
             if(xmlParser.FindChildElem("pgterms:name")) {
-                KKKLogger::Info("Found author " + xmlParser.GetChildData());
+                KKKLogger::Fine("Found author " + xmlParser.GetChildData());
             }
             xmlParser.OutOfElem();
         }
@@ -104,10 +104,9 @@ TEST_F(ParseGutenbergTests, ParseSubjects) {
                     xmlParser.ResetMainPos();
                     if (xmlParser.FindElem("rdf:value")) {
                         auto subject=xmlParser.GetData();
-                        KKKLogger::Info("Found subject " + subject);
+                        KKKLogger::Fine("Found subject " + subject);
                     }
                 }
-                //xmlParser.OutOfElem();
             }
             xmlParser.OutOfElem();
         }

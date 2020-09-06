@@ -11,17 +11,18 @@ GutenbergParser::GutenbergParser(const std::string &fileName) {
     this->fileName=fileName;
     xmlParser.Load(fileName);
     _parseOK = parseITso();
-    //cout << "Hier GutenbergParser!" << endl;
 }
 
 bool GutenbergParser::parseITso() {
 
     bool ret=true;
     ret &= parseGutenbergID();
-    ret &= parseTitle();
-    ret &= parseAuthors();
-    ret &= parseSubjects();
-    return true;
+    if(book.gutenbergID>0) {
+        ret &= parseTitle();
+        ret &= parseAuthors();
+        ret &= parseSubjects();
+    }
+    return ret;
 }
 
 bool GutenbergParser::parseGutenbergID() {
@@ -41,30 +42,39 @@ bool GutenbergParser::parseTitle() {
     xmlParser.IntoElem();
     if(!xmlParser.FindElem("pgterms:ebook")) return false;
     xmlParser.IntoElem();
-    if(!xmlParser.FindElem("dcterms:title")) return false;
-    book.title = xmlParser.GetData();
+    string title="";
+    while(xmlParser.FindElem("dcterms:title")) {
+        title += xmlParser.GetData();
+    }
+    book.title = title;
     return true;
 }
 
 bool GutenbergParser::parseAuthors() {
+    int level=0;
     book.authors.clear();
     xmlParser.ResetPos();
     if(!xmlParser.FindElem("rdf:RDF")) return false;
     xmlParser.IntoElem();
-    while( xmlParser.FindElem() ) {
-        auto tagName=xmlParser.GetTagName();
-        if(log) cout << "tagName=" << tagName << endl;
-        if(tagName=="pgterms:ebook") {
-            xmlParser.IntoElem();
-        } else if(tagName.rfind("marcrel:")==0 || tagName=="dcterms:creator") {
-            xmlParser.IntoElem();
-            if(xmlParser.FindChildElem("pgterms:name")) {
-                string author = xmlParser.GetChildData();
-                book.authors.push_back(author);
-                if(log) cout << "Found author " << author << endl;
+    while(level>=0) {
+        while( xmlParser.FindElem() ) {
+            auto tagName=xmlParser.GetTagName();
+            if(log) cout << "Author: tagName=" << tagName << endl;
+            if(tagName=="pgterms:agent") {
+                if(log) cout << "Found agent on 1st level " << endl;
+                if(xmlParser.FindChildElem("pgterms:name")) {
+                    string author = xmlParser.GetChildData();
+                    book.authors.push_back(author);
+                    if(log) cout << "Found author on 1st level " << author << endl;
+                }
+            } else if (level<2){
+                xmlParser.IntoElem();
+                level += 1;
             }
-            xmlParser.OutOfElem();
         }
+        xmlParser.OutOfElem();
+        level -= 1;
+
     }
     return true;
 }
@@ -102,7 +112,7 @@ bool GutenbergParser::parseSubjects() {
         }
         xmlParser.OutOfElem();
     }
-    return false;
+    return true;
 }
 
 

@@ -14,20 +14,25 @@
 class GutenbergParser {
     std::string fileName;
     CMarkup xmlParser;
-    bool _parseOK=false;
+    bool _parseOK = false;
     Book book;
 
 public:
     GutenbergParser(const std::string &fileName);
+
     bool parseOK() const { return _parseOK; }
 
-    const Book& getBook() const { return book; }
+    const Book &getBook() const { return book; }
 
 private:
     bool parseITso();
+
     bool parseGutenbergID();
+
     bool parseTitle();
+
     bool parseAuthors();
+
     bool parseSubjects();
 };
 

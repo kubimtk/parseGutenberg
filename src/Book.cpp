@@ -1,34 +1,18 @@
 //
 // Created by Wolfgang Kubisiak on 09.06.20.
 //
-
+#include <iostream>
 #include "Book.h"
 
 using namespace std;
 
 string Book::toJSon() const {
+    if(gutenbergID==0) return "";
     string ret="";
     ret += "{";
     ret += "\"id\":" + to_string(gutenbergID) + ",";
-    string nl = "\\";
-    string cr = "\\";
-    nl += "r";
-    cr += "n";
-    string tit=title;
-    size_t pos;
-    while( (pos=tit.find("\n"))!=string::npos) {
-        tit.replace(pos, 1, cr);
-    }
-    while( (pos=tit.find("\r"))!=string::npos) {
-        tit.replace(pos, 1, nl);
-    }
-/*
-    //while( (pos=tit.find("\r"))!=string::npos) {
-    //    tit.replace(pos, 1, "\n");
-    //}
-*/
-    //tit.erase(std::remove(tit.begin(), tit.end(), '\n'), tit.end());
-    ret += "\"title\":\"" + tit + "\",";
+
+    ret += "\"title\":\"" + escapeString(title) + "\",";
     ret += vector2JSonString("authors", authors);
     ret += vector2JSonString("subjects", subjects, false);
     ret += "}";
@@ -45,9 +29,32 @@ string Book::vector2JSonString(const string& vectorName, const vector<string>& v
             ret += ",";
         else
             nextLine=true;
-        ret += "\"" + elem + "\"";
+        ret += "\"" + escapeString(elem) + "\"";
     }
     ret += "]";
     if(endWithComma) ret +=",";
+    return ret;
+}
+
+std::string Book::toElasticSearchIndexJSon() const {
+    return "{\"index\":{\"_id\":\"pg" + to_string(gutenbergID) + "\"}}";
+}
+
+std::string Book::escapeString(const string &s) const {
+    string ret="";
+    for(auto ch : s) {
+        if(ch == '\n') {
+            ret.push_back('\\');
+            ret.push_back('n');
+        } else if(ch == '\r') {
+            ret.push_back('\\');
+            ret.push_back('r');
+        } else if(ch == '"') {
+            ret.push_back('\\');
+            ret.push_back('"');
+        } else {
+            ret.push_back(ch);
+        }
+    }
     return ret;
 }

@@ -24,11 +24,16 @@ void makeBulk(const string& startDir) {
         string path=entry.path();
         if(endsWith(path, ".rdf")) {
             GutenbergParser gp(path);
-            if(!gp.parseOK()) {
+            if (!gp.parseOK()) {
                 KKKLogger::Error("Error processing file " + path);
-                break;
+                //break;
             }
-            cout << gp.getBook().toJSon() << endl;        }
+            string json = gp.getBook().toJSon();
+            if (json.length() > 0) {
+                cout << gp.getBook().toElasticSearchIndexJSon() << endl;
+                cout << json << endl;
+            }
+        }
     }
 }
 

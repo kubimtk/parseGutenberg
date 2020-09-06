@@ -9,15 +9,20 @@
 #include <vector>
 
 class Book {
-    std::string vector2JSonString(const std::string& vectorName, const std::vector<std::string>& v, bool endWithComma=true) const;
+    std::string escapeString(const std::string &s) const;
+
+    std::string
+    vector2JSonString(const std::string &vectorName, const std::vector<std::string> &v, bool endWithComma = true) const;
 
 public:
-    int gutenbergID=-1;
-    std::string title="n/a";
+    int gutenbergID = -1;
+    std::string title = "n/a";
     std::vector<std::string> authors = {};
     std::vector<std::string> subjects = {};
 
     std::string toJSon() const;
+
+    std::string toElasticSearchIndexJSon() const;
 
 };
 
