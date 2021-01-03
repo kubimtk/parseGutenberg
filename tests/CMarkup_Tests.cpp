@@ -5,6 +5,7 @@
 #include <filesystem>
 using namespace testing;
 using namespace std;
+namespace fs = __fs::filesystem;
 
 
 class XMLParserTests : public testing::Test {
@@ -20,7 +21,7 @@ public:
 };
 
 TEST_F(XMLParserTests, TestCMarkup) {
-    //cout << "CWD=" << std::__fs::filesystem::current_path();
+    cout << "CWD=" << fs::current_path();
     ASSERT_TRUE(xmlParser.Load(Filename_test));
     xmlParser.FindElem();
     xmlParser.IntoElem();

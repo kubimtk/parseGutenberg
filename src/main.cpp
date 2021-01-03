@@ -5,8 +5,7 @@
 
 
 using namespace std;
-namespace fs = std::__fs::filesystem;
-//using namespace std::__fs;
+namespace fs = __fs::filesystem;
 
 static bool endsWith(const std::string& str, const std::string& suffix)
 {
