@@ -5,7 +5,7 @@
 #include "GutenbergParser.h"
 #include <iostream>
 using namespace std;
-bool log=false;
+bool logITso=false;
 
 GutenbergParser::GutenbergParser(const std::string &fileName) {
     this->fileName=fileName;
@@ -59,13 +59,13 @@ bool GutenbergParser::parseAuthors() {
     while(level>=0) {
         while( xmlParser.FindElem() ) {
             auto tagName=xmlParser.GetTagName();
-            if(log) cout << "Author: tagName=" << tagName << endl;
+            if(logITso) cout << "Author: tagName=" << tagName << endl;
             if(tagName=="pgterms:agent") {
-                if(log) cout << "Found agent on 1st level " << endl;
+                if(logITso) cout << "Found agent on 1st level " << endl;
                 if(xmlParser.FindChildElem("pgterms:name")) {
                     string author = xmlParser.GetChildData();
                     book.authors.push_back(author);
-                    if(log) cout << "Found author on 1st level " << author << endl;
+                    if(logITso) cout << "Found author on 1st level " << author << endl;
                 }
             } else if (level<2){
                 xmlParser.IntoElem();
@@ -87,24 +87,24 @@ bool GutenbergParser::parseSubjects() {
     if(!(xmlParser.FindElem("pgterms:ebook"))) return false;
     xmlParser.IntoElem();
     while( xmlParser.FindElem("dcterms:subject") ) {
-        if(log) cout << "Found dcterms:subject" << endl;
+        if(logITso) cout << "Found dcterms:subject" << endl;
         xmlParser.IntoElem();
         if(xmlParser.FindElem("rdf:Description")) {
-            if(log) cout << "Found rdf:Description" << endl;
+            if(logITso) cout << "Found rdf:Description" << endl;
             xmlParser.IntoElem();
             if (xmlParser.FindElem("dcam:memberOf")) {
-                if(log) cout << "Found dcam:memberOf" << endl;
+                if(logITso) cout << "Found dcam:memberOf" << endl;
                 //xmlParser.IntoElem();
                 auto memberOfValue = xmlParser.GetAttrib("rdf:resource");
-                if(log) cout << "memberOfValue=" << memberOfValue << endl;
+                if(logITso) cout << "memberOfValue=" << memberOfValue << endl;
                 if( (memberOfValue.length()>4) &&
                     (0 == memberOfValue.compare(memberOfValue.length()-4, 4, "LCSH")) ) {
-                    if(log) cout << "match found!" << endl;
+                    if(logITso) cout << "match found!" << endl;
                     xmlParser.ResetMainPos();
                     if (xmlParser.FindElem("rdf:value")) {
                         auto subject=xmlParser.GetData();
                         book.subjects.push_back(subject);
-                        if(log) cout << "Found subject " << subject << endl;
+                        if(logITso) cout << "Found subject " << subject << endl;
                     }
                 }
             }

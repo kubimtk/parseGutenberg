@@ -2,6 +2,7 @@
 #include "Markup.h"
 #include "KKKLogger.h"
 #include "TestFilePaths.h"
+#include <filesystem>
 using namespace testing;
 using namespace std;
 
@@ -19,7 +20,8 @@ public:
 };
 
 TEST_F(XMLParserTests, TestCMarkup) {
-    xmlParser.Load(Filename_test);
+    //cout << "CWD=" << std::__fs::filesystem::current_path();
+    ASSERT_TRUE(xmlParser.Load(Filename_test));
     xmlParser.FindElem();
     xmlParser.IntoElem();
     ASSERT_TRUE(xmlParser.FindElem("ITEM"));

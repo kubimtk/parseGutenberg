@@ -18,7 +18,7 @@ const std::string Filename_14363 = GutenbergFilesPath + "14363/pg14363.rdf"; //L
 const std::string Filename_6420 = GutenbergFilesPath + "6420/pg6420.rdf"; //title handling
 const std::string Filename_999999 = GutenbergFilesPath + "999999/pg999999.rdf"; //author handling
 
-const std::string Filename_test = "../..//tests/test.xml"; // relative to ./cmake-build-debug/tests/testITso
+const std::string Filename_test = "test.xml"; // relative to ./cmake-build-debug/tests/testITso
 
 
 #endif //PARSEGUTENBERG_TESTFILEPATHS_H

@@ -1,11 +1,12 @@
 #include <iostream>
+#include <filesystem>
 #include "KKKLogger.h"
 #include "GutenbergParser.h"
 
-#include <filesystem>
-namespace fs = std::filesystem;
 
 using namespace std;
+namespace fs = std::__fs::filesystem;
+//using namespace std::__fs;
 
 static bool endsWith(const std::string& str, const std::string& suffix)
 {
